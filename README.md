@@ -19,6 +19,19 @@ git clone <repository-url>
 cd <project-folder>
 ```
 
+### Running (On Host Machine)
+
+For running both services together in Docker:
+
+```sh
+make docker-build
+make docker-up
+# When done
+make docker-down
+```
+
+---
+
 ### Start using Dev Container (recommended)
 
 This project comes with a **VS Code Dev Container** setup, allowing you to develop in a fully containerised environment with Python and Go pre-installed.
@@ -64,24 +77,13 @@ Whenever you update the protobuf file (`proto/image_recognition.proto`), regener
 make proto
 ```
 
-### Running Services
+### Running Services on Dev Machine
 
 Run the services locally:
 
 ```sh
 make run-python-service  # Python classification service
 make run-go-service      # Go gateway service
-```
-
-### Docker Compose
-
-For running both services together in Docker:
-
-```sh
-make docker-build
-make docker-up
-# When done
-make docker-down
 ```
 
 ---
