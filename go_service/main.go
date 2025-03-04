@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -16,20 +16,20 @@ const pythonServiceAddress = "python_service:50051"
 
 func labelImageHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST is allowed", http.StatusMethodNotAllowed)
+		http.Error(w, `{"error": "Only POST is allowed"}`, http.StatusMethodNotAllowed)
 		return
 	}
 
 	file, _, err := r.FormFile("image")
 	if err != nil {
-		http.Error(w, "Failed to read file", http.StatusBadRequest)
+		http.Error(w, `{"error": "Failed to read file"}`, http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
 
 	imageBytes, err := io.ReadAll(file)
 	if err != nil {
-		http.Error(w, "Failed to read file", http.StatusInternalServerError)
+		http.Error(w, `{"error": "Failed to read file"}`, http.StatusInternalServerError)
 		return
 	}
 
@@ -43,11 +43,20 @@ func labelImageHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := client.GetLabels(context.Background(), &pb.ImageRequest{ImageData: imageBytes})
 	if err != nil {
 		log.Printf("gRPC GetLabels failed: %v\n", err)
-		http.Error(w, "Failed to get labels", http.StatusInternalServerError)
+		http.Error(w, `{"error": "Failed to get labels"}`, http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprintf(w, "Labels: %v", resp.Labels)
+	// Set content type to JSON
+	w.Header().Set("Content-Type", "application/json")
+
+	// Create response object
+	response := map[string][]string{
+		"labels": resp.Labels,
+	}
+
+	// Encode response to JSON
+	json.NewEncoder(w).Encode(response)
 }
 
 func main() {
