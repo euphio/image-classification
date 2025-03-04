@@ -1,0 +1,13 @@
+version: '3'
+services:
+  go_service:
+    build: ./go_service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - python_service
+
+  python_service:
+    build: ./python_service
+    ports:
+      - "50051:50051"

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package image_recognition;
+
+option go_package = "go_service/proto";
+
+service ImageLabelService {
+    rpc GetLabels (ImageRequest) returns (ImageResponse);
+}
+
+message ImageRequest {
+    bytes image_data = 1;
+}
+
+message ImageResponse {
+    repeated string labels = 1;
+}
