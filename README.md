@@ -30,6 +30,23 @@ make docker-up
 make docker-down
 ```
 
+### Consuming the API
+
+Call the API
+
+```sh
+curl -X POST http://localhost:8080/label-image \
+     -F "image=@path/to/your/image.jpg"
+```
+
+which will return
+
+```json
+{
+    "labels": ["label1", "label2", "label3"]
+}
+```
+
 ---
 
 ### Start using Dev Container (recommended)
@@ -77,7 +94,7 @@ Whenever you update the protobuf file (`proto/image_recognition.proto`), regener
 make proto
 ```
 
-### Running Services on Dev Machine
+### Running Services on Dev Container
 
 Run the services locally:
 
